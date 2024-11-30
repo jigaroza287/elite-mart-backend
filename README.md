@@ -70,5 +70,5 @@ Ensure you have the following installed:
 ### **Installation**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/swigato-backend.git
-   cd swigato-backend
+   git clone https://github.com/your-username/elite-mart-backend.git
+   cd elite-mart-backend
