@@ -72,3 +72,26 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/your-username/elite-mart-backend.git
    cd elite-mart-backend
+   ```
+   
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+   
+3. Create a .env file in the root directory with the following variables:
+   ```bash
+   PORT=3000
+   DB_PORT=5432
+   DB_HOST=localhost
+   DB_USER=your_db_user
+   DB_PASSWORD=your_db_password
+   DB_NAME=swigato
+   JWT_SECRET=your_jwt_secret
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
