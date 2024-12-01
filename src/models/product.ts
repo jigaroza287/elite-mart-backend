@@ -2,9 +2,13 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 class Product extends Model {
   public id!: number;
+  public categoryId!: number;
   public name!: string;
-  public price!: number;
-  public stock!: number;
+  public description!: string;
+  public gender!: "Men" | "Women" | "Children" | "Unisex";
+  public ratings!: number;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 
   static initModel(sequelize: Sequelize) {
     Product.init(
@@ -14,20 +18,28 @@ class Product extends Model {
           autoIncrement: true,
           primaryKey: true,
         },
+        categoryId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
         name: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        price: {
-          type: DataTypes.FLOAT,
+        description: {
+          type: DataTypes.STRING,
           allowNull: false,
         },
-        stock: {
-          type: DataTypes.INTEGER,
+        gender: {
+          type: DataTypes.ENUM("Men", "Women", "Children", "Unisex"),
           allowNull: false,
+        },
+        ratings: {
+          type: DataTypes.DECIMAL(3, 2),
+          allowNull: true,
         },
       },
-      { sequelize, tableName: "products" }
+      { sequelize, tableName: "products", timestamps: true }
     );
   }
 }
