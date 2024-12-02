@@ -17,7 +17,7 @@ class Category extends Model {
           allowNull: false,
         },
       },
-      { sequelize, tableName: "Category" }
+      { sequelize, tableName: "categories" }
     );
   }
 }

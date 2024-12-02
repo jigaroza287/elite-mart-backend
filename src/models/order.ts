@@ -1,12 +1,17 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import User from "./user";
-import Product from "./product";
+import { User } from "./";
+
+interface ProductInOrder {
+  productVariantId: number;
+  quantity: number;
+}
 
 class Order extends Model {
   public id!: number;
   public userId!: number;
-  public productId!: number;
-  public quantity!: number;
+  public products!: ProductInOrder[];
+  public totalAmount!: number;
+  public status!: "pending" | "complete" | "cancel";
 
   static initModel(sequelize: Sequelize) {
     Order.init(
@@ -24,17 +29,18 @@ class Order extends Model {
             key: "id",
           },
         },
-        productId: {
-          type: DataTypes.INTEGER,
+        products: {
+          type: DataTypes.ARRAY(DataTypes.JSON),
           allowNull: false,
-          references: {
-            model: Product,
-            key: "id",
-          },
         },
-        quantity: {
-          type: DataTypes.INTEGER,
+        totalAmount: {
+          type: DataTypes.DECIMAL(12, 2),
           allowNull: false,
+        },
+        status: {
+          type: DataTypes.ENUM("pending", "complete", "cancel"),
+          allowNull: false,
+          defaultValue: "pending",
         },
       },
       { sequelize, tableName: "orders" }

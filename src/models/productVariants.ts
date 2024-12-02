@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { Product } from "./";
 
 class ProductVariant extends Model {
   public id!: number;
@@ -9,7 +10,7 @@ class ProductVariant extends Model {
   public price!: number;
   public discount!: number;
   public stock!: number;
-  public images!: [string];
+  public images!: string[];
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
@@ -24,6 +25,10 @@ class ProductVariant extends Model {
         productId: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          references: {
+            model: Product,
+            key: "id",
+          },
         },
         size: {
           type: DataTypes.ENUM("XS", "S", "M", "L", "XL", "XXL", "XXXL"),
@@ -55,7 +60,7 @@ class ProductVariant extends Model {
           allowNull: true,
         },
       },
-      { sequelize, tableName: "products", timestamps: true }
+      { sequelize, tableName: "productVariants", timestamps: true }
     );
   }
 }

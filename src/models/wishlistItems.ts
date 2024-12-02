@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { Wishlist } from "./";
 
-class Category extends Model {
+class WishlistItem extends Model {
   public id!: number;
   public wishlistId!: number;
   public productId!: number;
@@ -9,7 +10,7 @@ class Category extends Model {
   public readonly updatedAt!: Date;
 
   static initModel(sequelize: Sequelize) {
-    Category.init(
+    WishlistItem.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -19,8 +20,12 @@ class Category extends Model {
         wishlistId: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          references: {
+            model: Wishlist,
+            key: "id",
+          },
         },
-        productId: {
+        productVariantId: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
@@ -29,9 +34,9 @@ class Category extends Model {
           allowNull: true,
         },
       },
-      { sequelize, tableName: "Category", timestamps: true }
+      { sequelize, tableName: "wishlistItems", timestamps: true }
     );
   }
 }
 
-export default Category;
+export default WishlistItem;

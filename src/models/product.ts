@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { Category } from "./";
 
 class Product extends Model {
   public id!: number;
@@ -21,6 +22,10 @@ class Product extends Model {
         categoryId: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          references: {
+            model: Category,
+            key: "id",
+          },
         },
         name: {
           type: DataTypes.STRING,

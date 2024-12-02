@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { User } from "./";
 
 class Wishlist extends Model {
   public id!: number;
@@ -17,9 +18,13 @@ class Wishlist extends Model {
         userId: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          references: {
+            model: User,
+            key: "id",
+          },
         },
       },
-      { sequelize, tableName: "Wishlist", timestamps: true }
+      { sequelize, tableName: "wishlists", timestamps: true }
     );
   }
 }
