@@ -3,6 +3,7 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 class Category extends Model {
   public id!: number;
   public name!: string;
+  public image!: string;
 
   static initModel(sequelize: Sequelize) {
     Category.init(
@@ -13,6 +14,10 @@ class Category extends Model {
           primaryKey: true,
         },
         name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        image: {
           type: DataTypes.STRING,
           allowNull: false,
         },

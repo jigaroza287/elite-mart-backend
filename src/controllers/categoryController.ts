@@ -3,8 +3,8 @@ import { Category } from "../models";
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
-    const category = await Category.create({ name });
+    const { name, image } = req.body;
+    const category = await Category.create({ name, image });
     res.status(201).json(category);
   } catch (error) {
     res.status(500).json({ error: "Failed to create category" });

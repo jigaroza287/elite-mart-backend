@@ -6,7 +6,7 @@ class Product extends Model {
   public categoryId!: number;
   public name!: string;
   public description!: string;
-  public gender!: "Men" | "Women" | "Children" | "Unisex";
+  public demographic!: "Men" | "Women" | "Kids" | "Unisex";
   public ratings!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -35,8 +35,8 @@ class Product extends Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        gender: {
-          type: DataTypes.ENUM("Men", "Women", "Children", "Unisex"),
+        demographic: {
+          type: DataTypes.ENUM("Men", "Women", "Kids", "Unisex"),
           allowNull: false,
         },
         ratings: {

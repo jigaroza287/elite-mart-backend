@@ -3,12 +3,12 @@ import { Product, ProductVariant } from "../models";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { categoryId, name, description, gender, ratings } = req.body;
+    const { categoryId, name, description, demographic, ratings } = req.body;
     const product = await Product.create({
       categoryId,
       name,
       description,
-      gender,
+      demographic,
       ratings,
     });
     res.status(201).json(product);
