@@ -51,7 +51,14 @@ export const getNewArrivals = async () => {
         ],
       },
     ],
-    attributes: ["id", "name", "description", "demographic", "ratings"],
+    attributes: [
+      "id",
+      "name",
+      "description",
+      "demographic",
+      "ratings",
+      "createdAt",
+    ],
     order: [["createdAt", "DESC"]],
     limit: 10,
   });
