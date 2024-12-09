@@ -1,5 +1,13 @@
 import { Request, Response } from "express";
+import { FindOptions } from "sequelize";
 import { Product, ProductVariant } from "../models";
+import { Op } from "sequelize";
+
+const FILTERS = {
+  TOP_RATED: "top_rated",
+  NEW_ARRIVALS: "new_arrivals",
+  DISCOUNTS: "discounts",
+};
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
@@ -19,10 +27,75 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Product.findAll();
-    res.status(200).json(products);
+    const {
+      filter,
+      page = 1,
+      limit = 10,
+      categoryId,
+      search,
+      sortBy,
+      sortOrder = "ASC",
+    } = req.query;
+
+    const currentPage = parseInt(page as string, 10);
+    const itemsPerPage = parseInt(limit as string, 10);
+    const offset = (currentPage - 1) * itemsPerPage;
+
+    const queryOptions: any = {
+      where: {},
+      include: [
+        {
+          model: ProductVariant,
+          as: "variants",
+        },
+      ],
+      limit: itemsPerPage,
+      offset,
+    };
+
+    switch (filter) {
+      case FILTERS.TOP_RATED:
+        queryOptions.order = [["ratings", "DESC"]];
+        break;
+      case FILTERS.NEW_ARRIVALS:
+        queryOptions.order = [["createdAt", "DESC"]];
+        break;
+      case FILTERS.DISCOUNTS:
+        queryOptions.where.discount = { [Op.gt]: 0 };
+        break;
+      default:
+        break;
+    }
+
+    if (categoryId) {
+      queryOptions.where.categoryId = categoryId;
+    }
+
+    if (search) {
+      queryOptions.where.name = { [Op.iLike]: `%${search}%` };
+    }
+
+    if (sortBy) {
+      queryOptions.order = [[sortBy as string, sortOrder as string]];
+    }
+
+    const { rows: products, count: total } = await Product.findAndCountAll(
+      queryOptions
+    );
+    console.log("total: ", total);
+    console.log("itemsPerPage: ", itemsPerPage);
+
+    const totalPages = Math.ceil(total / itemsPerPage);
+
+    res.json({
+      success: true,
+      data: products,
+      currentPage,
+      totalPages,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.log("error: ", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
