@@ -82,8 +82,6 @@ export const getProducts = async (req: Request, res: Response) => {
     const { rows: products, count: total } = await Product.findAndCountAll(
       queryOptions
     );
-    console.log("total: ", total);
-    console.log("itemsPerPage: ", itemsPerPage);
 
     const totalPages = Math.ceil(total / itemsPerPage);
 
