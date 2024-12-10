@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { FindOptions } from "sequelize";
+import { Op, where } from "sequelize";
 import { Product, ProductVariant } from "../models";
-import { Op } from "sequelize";
 
 const FILTERS = {
   TOP_RATED: "top_rated",
@@ -30,7 +29,7 @@ export const getProducts = async (req: Request, res: Response) => {
     const {
       filter,
       page = 1,
-      limit = 10,
+      limit = 20,
       categoryId,
       search,
       sortBy,
@@ -47,6 +46,7 @@ export const getProducts = async (req: Request, res: Response) => {
         {
           model: ProductVariant,
           as: "variants",
+          required: true,
         },
       ],
       limit: itemsPerPage,
@@ -79,11 +79,10 @@ export const getProducts = async (req: Request, res: Response) => {
       queryOptions.order = [[sortBy as string, sortOrder as string]];
     }
 
-    const { rows: products, count: total } = await Product.findAndCountAll(
-      queryOptions
-    );
+    const productCount = await Product.count({ where: queryOptions.where });
+    const products = await Product.findAll(queryOptions);
 
-    const totalPages = Math.ceil(total / itemsPerPage);
+    const totalPages = Math.ceil(productCount / itemsPerPage);
 
     res.json({
       success: true,
