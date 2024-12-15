@@ -6,6 +6,7 @@ class ProductVariant extends Model {
   public productId!: number;
   public size!: "XS" | "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
   public color!: string;
+  public colorCode!: string;
   public sku!: string;
   public price!: number;
   public discount!: number;
@@ -35,6 +36,10 @@ class ProductVariant extends Model {
           allowNull: false,
         },
         color: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        colorCode: {
           type: DataTypes.STRING,
           allowNull: false,
         },
