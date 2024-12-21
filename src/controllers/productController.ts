@@ -10,11 +10,13 @@ const FILTERS = {
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { categoryId, name, description, demographic, ratings } = req.body;
+    const { categoryId, name, description, details, demographic, ratings } =
+      req.body;
     const product = await Product.create({
       categoryId,
       name,
       description,
+      details,
       demographic,
       ratings,
     });

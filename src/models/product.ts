@@ -6,6 +6,7 @@ class Product extends Model {
   public categoryId!: number;
   public name!: string;
   public description!: string;
+  public details!: string[];
   public demographic!: "Men" | "Women" | "Kids" | "Unisex";
   public ratings!: number;
   public readonly createdAt!: Date;
@@ -33,6 +34,10 @@ class Product extends Model {
         },
         description: {
           type: DataTypes.STRING,
+          allowNull: false,
+        },
+        details: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull: false,
         },
         demographic: {
