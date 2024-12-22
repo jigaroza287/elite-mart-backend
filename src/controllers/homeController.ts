@@ -1,11 +1,11 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import {
   getCategories,
   getNewArrivals,
   getTopSellingProducts,
 } from "../services/homeService";
 
-export const getHomePageData = async (res: Response) => {
+export const getHomePageData = async (_: Request, res: Response) => {
   try {
     const categories = await getCategories();
     const topSellingProducts = await getTopSellingProducts();
