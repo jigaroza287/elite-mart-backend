@@ -38,7 +38,7 @@ class Product extends Model {
         },
         details: {
           type: DataTypes.ARRAY(DataTypes.STRING),
-          allowNull: false,
+          allowNull: true,
         },
         demographic: {
           type: DataTypes.ENUM("Men", "Women", "Kids", "Unisex"),
