@@ -89,6 +89,7 @@ export const getProducts = async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: products,
+      productCount,
       currentPage,
       totalPages,
     });
