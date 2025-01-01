@@ -1,12 +1,7 @@
 import { Request, Response } from "express";
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import { Product, ProductVariant } from "../models";
-
-const FILTERS = {
-  TOP_RATED: "top_rated",
-  NEW_ARRIVALS: "new_arrivals",
-  DISCOUNTS: "discounts",
-};
+import { FILTERS, ITEMS_LIMIT } from "../utils/constants";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
@@ -31,7 +26,7 @@ export const getProducts = async (req: Request, res: Response) => {
     const {
       filter,
       page = 1,
-      limit = 20,
+      limit = ITEMS_LIMIT,
       categoryId,
       search,
       sortBy,
@@ -65,8 +60,6 @@ export const getProducts = async (req: Request, res: Response) => {
       case FILTERS.DISCOUNTS:
         queryOptions.where.discount = { [Op.gt]: 0 };
         break;
-      default:
-        break;
     }
 
     if (categoryId) {
@@ -81,17 +74,21 @@ export const getProducts = async (req: Request, res: Response) => {
       queryOptions.order = [[sortBy as string, sortOrder as string]];
     }
 
-    const productCount = await Product.count({ where: queryOptions.where });
-    const products = await Product.findAll(queryOptions);
+    const [productCount, products] = await Promise.all([
+      Product.count({ where: queryOptions.where }),
+      Product.findAll(queryOptions),
+    ]);
 
     const totalPages = Math.ceil(productCount / itemsPerPage);
 
     res.json({
       success: true,
       data: products,
-      productCount,
-      currentPage,
-      totalPages,
+      meta: {
+        productCount,
+        currentPage,
+        totalPages,
+      },
     });
   } catch (error) {
     console.log("error: ", error);
