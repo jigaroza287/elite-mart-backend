@@ -98,17 +98,8 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const updateProductVariant = async (req: Request, res: Response) => {
   try {
-    const {
-      productId,
-      size,
-      color,
-      colorCode,
-      sku,
-      price,
-      discount,
-      stock,
-      images,
-    } = req.body;
+    const { productId, size, color, colorCode, sku, price, discount, stock } =
+      req.body;
 
     const product = await Product.findByPk(productId);
     if (!product) {
