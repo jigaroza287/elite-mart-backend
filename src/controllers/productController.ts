@@ -31,6 +31,9 @@ export const getProducts = async (req: Request, res: Response) => {
       search,
       sortBy,
       sortOrder = "ASC",
+      demographic,
+      minPrice,
+      maxPrice,
     } = req.query;
 
     const currentPage = parseInt(page as string, 10);
@@ -44,6 +47,7 @@ export const getProducts = async (req: Request, res: Response) => {
           model: ProductVariant,
           as: "variants",
           required: true,
+          where: {},
         },
       ],
       limit: itemsPerPage,
@@ -66,12 +70,38 @@ export const getProducts = async (req: Request, res: Response) => {
       queryOptions.where.categoryId = categoryId;
     }
 
+    if (demographic) {
+      queryOptions.where.demographic = demographic;
+    }
+
+    if (minPrice || maxPrice) {
+      if (minPrice)
+        queryOptions.include[0].where.price = {
+          [Op.gte]: parseFloat(minPrice as string),
+        };
+      if (maxPrice)
+        queryOptions.include[0].where.price = {
+          ...(queryOptions.include[0].where.price || {}),
+          [Op.lte]: parseFloat(maxPrice as string),
+        };
+    }
+
     if (search) {
       queryOptions.where.name = { [Op.iLike]: `%${search}%` };
     }
 
-    if (sortBy) {
-      queryOptions.order = [[sortBy as string, sortOrder as string]];
+    if (sortBy === "price") {
+      queryOptions.order = [
+        [
+          { model: ProductVariant, as: "variants" },
+          "price",
+          (sortOrder as string).toUpperCase(),
+        ],
+      ];
+    } else if (sortBy) {
+      queryOptions.order = [
+        [sortBy as string, (sortOrder as string).toUpperCase()],
+      ];
     }
 
     const [productCount, products] = await Promise.all([
