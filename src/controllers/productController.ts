@@ -62,7 +62,7 @@ export const getProducts = async (req: Request, res: Response) => {
         queryOptions.order = [["createdAt", "DESC"]];
         break;
       case FILTERS.DISCOUNTS:
-        queryOptions.where.discount = { [Op.gt]: 0 };
+        queryOptions.include[0].where.discount = { [Op.gt]: 0 };
         break;
     }
 
@@ -75,15 +75,18 @@ export const getProducts = async (req: Request, res: Response) => {
     }
 
     if (minPrice || maxPrice) {
-      if (minPrice)
+      if (minPrice) {
         queryOptions.include[0].where.price = {
+          ...(queryOptions.include[0].where.price || {}),
           [Op.gte]: parseFloat(minPrice as string),
         };
-      if (maxPrice)
+      }
+      if (maxPrice) {
         queryOptions.include[0].where.price = {
           ...(queryOptions.include[0].where.price || {}),
           [Op.lte]: parseFloat(maxPrice as string),
         };
+      }
     }
 
     if (search) {
